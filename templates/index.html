@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TwitchTok Connect</title>
+    <style>
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        /* Logo styling */
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .logo .twitch {
+            color: #9146FF; /* Twitch Purple */
+        }
+
+        .logo .tok {
+            background: linear-gradient(45deg, #25F4EE, #FE2C55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Description */
+        .description {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Label Styling */
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        /* TikTok Input Styling with Gradient Border */
+        input#tiktok-username {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #f9f9f9; /* Neutral background */
+            background-image: linear-gradient(white, white), linear-gradient(45deg, #25F4EE, #FE2C55);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        input#tiktok-username:focus {
+            border-color: transparent;
+            box-shadow: 0 0 8px rgba(254, 44, 85, 0.3);
+            outline: none;
+        }
+
+        /* Twitch Input Styling */
+        input#twitch-username {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #9146FF; /* Twitch purple border */
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #ede7ff; /* Light purple background */
+        }
+
+        input#twitch-username:focus {
+            border-color: #9146FF;
+            box-shadow: 0 0 8px rgba(145, 70, 255, 0.3);
+            outline: none;
+        }
+
+        /* Simpler Button Styling */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-image: linear-gradient(to right, #9146FF, #FE2C55); /* Simpler gradient with Twitch and TikTok colors */
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle hover effect */
+        }
+
+        button:active {
+            background-image: linear-gradient(to right, #9146FF, #FE2C55); /* No color change on click, keeping it simple */
+            box-shadow: none;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            button {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <span class="twitch">Twitch</span><span class="tok">Tok</span>
+        </div>
+
+        <!-- Description -->
+        <p class="description">
+            Connect your TikTok and Twitch accounts to combine live chat from both platforms in one place.
+            Simply enter your usernames below and hit "Connect".
+        </p>
+
+        <!-- Form -->
+        <form action="/listen" method="get">
+            <label for="tiktok-username">TikTok Username</label>
+            <input type="text" id="tiktok-username" name="tiktokUsername" placeholder="Enter TikTok Username">
+
+            <label for="twitch-username">Twitch Username</label>
+            <input type="text" id="twitch-username" name="twitchUsername" placeholder="Enter Twitch Username">
+
+            <button id="connect-button" type="submit">Connect</button>
+        </form>
+    </div>
+    <script>
+        const tiktokUsername = localStorage.getItem('tiktokUsername');
+        const twitchUsername = localStorage.getItem('twitchUsername');
+        if (tiktokUsername && twitchUsername) {
+            document.getElementById('tiktok-username').value = tiktokUsername;
+            document.getElementById('twitch-username').value = twitchUsername;
+        }
+    </script>
+</body>
+</html>

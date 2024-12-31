@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "twitchtok"
+version = "0.1.0"
+description = ""
+authors = ["Dmytro Hissa <d_hissa-itssv@kw.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+twitchapi = "^4.3.1"
+flask = "^3.0.3"
+flask-socketio = "^5.4.1"
+jinja2 = "^3.1.4"
+twitch-chat-irc = "^0.0.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

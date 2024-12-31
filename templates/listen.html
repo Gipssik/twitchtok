@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TwitchTok Live Comments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <style>
+        /* Overall Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* Fullscreen mode style */
+        .fullscreen {
+            display: none;
+        }
+
+        /* Logo styling */
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .logo .twitch {
+            color: #9146FF; /* Twitch Purple */
+        }
+
+        .logo .tok {
+            background: linear-gradient(45deg, #25F4EE, #FE2C55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Error Message Styles */
+        .errors {
+            width: 100%;
+            max-width: 600px; /* Max width for larger screens */
+        }
+
+        .error {
+            display: flex;
+            align-items: center;
+            background-color: #ff4d4d; /* Red background for errors */
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 14px; /* Font size for error messages */
+            border: 1px solid #ff0000; /* Border color */
+        }
+
+        .error img {
+            width: 20px; /* Width for the error icon */
+            height: 20px; /* Height for the error icon */
+            margin-right: 10px; /* Space between icon and text */
+        }
+
+        /* Comment Container Styles */
+        .comment-container {
+            width: 100%;
+            max-width: 600px;
+            flex-grow: 1;
+            height: 70vh;
+            background-color: #1e1e1e;
+            border: 2px solid #333;
+            border-radius: 0 0 10px 10px;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scrollbar styling */
+        .comment-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .comment-container::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+        }
+
+        .comment-container::-webkit-scrollbar-track {
+            background-color: #2e2e2e;
+        }
+
+        /* Comment Styles */
+        .comment {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #fff;
+            flex-shrink: 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .comment .username {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .comment .separator {
+            margin-right: 5px;
+            font-weight: bold;
+            opacity: 0.7;
+        }
+
+        /* Twitch Comment Styles */
+        .comment.twitch {
+            background-color: #6441a5;
+            border: 2px solid #9146ff;
+        }
+
+        /* TikTok Comment Styles */
+        .comment.tiktok {
+            background-color: #000000;
+            border: 2px solid #fe2c55;
+        }
+
+        /* Channel Tracking Block Styles */
+        .tracking-container {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            background-color: #2e2e2e;
+            border-radius: 10px 10px 0 0;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tracking .twitch-track {
+            color: #9146ff;
+            font-weight: bold;
+        }
+
+        .tracking .tiktok-track {
+            background: linear-gradient(45deg, #25F4EE, #FE2C55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Go Home and Fullscreen Button Styles with Icons */
+        .btn-custom {
+            background-color: #444;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            min-width: fit-content;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-custom:hover {
+            background-color: #666;
+        }
+
+        /* Connecting message */
+        .connecting {
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            text-align: center;
+            margin: auto auto;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 28px;
+            }
+
+            .comment {
+                font-size: 12px;
+            }
+
+            .btn-custom {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .comment-container {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <span class="twitch">Twitch</span><span class="tok">Tok</span>
+    </div>
+    <div class="errors"></div>
+
+    <!-- Channel Tracking Block -->
+    <div class="tracking-container">
+        <div class="tracking">
+            <span class="bi bi-twitch twitch-track"> Twitch: <span id="twitch-tracked"></span></span>
+        </div>
+        <div class="tracking">
+            <span class="bi bi-tiktok tiktok-track"> TikTok: <span id="tiktok-tracked"></span></span>
+        </div>
+    </div>
+
+    <div class="comment-container">
+        <div class="connecting">Connecting...</div>
+    </div>
+
+    <!-- Buttons with Icons -->
+    <div class="buttons">
+        <button class="btn-custom go-home" onclick="window.location.href = '/'">
+            <i class="bi bi-house-door"></i> Go Home
+        </button>
+        <button class="btn-custom fullscreen-toggle" id="toggle-fullscreen">
+            <i class="bi bi-arrows-fullscreen"></i> Fullscreen Mode
+        </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        const commentContainer = document.querySelector('.comment-container');
+        const errors = document.querySelector('.errors');
+        let firstComment = true;
+
+        const connect = (tiktokUsername, twitchUsername) => {
+            const twitchTrack = document.getElementById('twitch-tracked');
+            const tiktokTrack = document.getElementById('tiktok-tracked');
+            const socket = io({
+              reconnection: true,           // Enable automatic reconnection
+              reconnectionAttempts: 30,       // Max number of reconnection attempts (set as needed)
+              reconnectionDelay: 1000,       // Delay before trying to reconnect (ms)
+              reconnectionDelayMax: 5000,    // Max delay between attempts (ms)
+            });
+            const userData = {
+                'tiktok_user': tiktokUsername,
+                'twitch_user': twitchUsername,
+            };
+
+            twitchTrack.textContent = twitchUsername;
+            tiktokTrack.textContent = tiktokUsername;
+
+            commentContainer.innerHTML = 'Waiting for comments...';
+
+            socket.on('connect', function () {
+                console.log('Connected to server');
+                listenToEvents(socket);
+                socket.emit('listen', userData);
+            });
+
+            socket.on('reconnect', function (attemptNumber) {
+                console.log(`Reconnecting... Attempt ${attemptNumber}`);
+                listenToEvents(socket);
+                socket.emit('listen', userData);
+            });
+        };
+
+        const listenToEvents = (sock) => {
+            sock.on('listen', function (data) {
+                if (firstComment) {
+                    firstComment = false;
+                    commentContainer.innerHTML = '';
+                }
+                commentContainer.innerHTML += `<div class="comment ${data.type}">
+                    <span class="username">${data.user}</span>
+                    <span class="separator">|</span>
+                    <span class="text">${data.message}</span>
+                </div>`;
+                if (isUserNearTheBottom(commentContainer)) {
+                    scrollToBottom(commentContainer);
+                }
+            });
+
+            sock.on('live-error', function (data) {
+                errors.innerHTML += `<div class="error"><img src="https://img.icons8.com/ios-filled/50/ffffff/error.png" alt="Error Icon" />${data.message}</div>`;
+            });
+        }
+
+        const isUserNearTheBottom = (element) => {
+            const threshold = 200;
+            return element.scrollHeight - element.scrollTop - element.clientHeight <= threshold;
+        };
+
+        const scrollToBottom = (element) => {
+            element.scrollTo(0, element.scrollHeight);
+        };
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const tiktokUsername = urlParams.get('tiktokUsername');
+        const twitchUsername = urlParams.get('twitchUsername');
+        if (tiktokUsername && twitchUsername) {
+            localStorage.setItem('tiktokUsername', tiktokUsername);
+            localStorage.setItem('twitchUsername', twitchUsername);
+            connect(tiktokUsername, twitchUsername);
+        }
+
+        // Fullscreen Mode Toggle
+        const toggleFullscreen = () => {
+            const commentContainer = document.querySelector('.comment-container');
+            const trackingContainer = document.querySelector('.tracking-container');
+            const logo = document.querySelector('.logo');
+            const homeButton = document.querySelector('.go-home');
+            const fullscreenButton = document.querySelector('.fullscreen-toggle');
+
+            const isFullscreen = commentContainer.classList.toggle('fullscreen');
+            trackingContainer.style.display = isFullscreen ? 'none' : 'flex';
+            logo.style.display = isFullscreen ? 'none' : 'block';
+            homeButton.style.display = isFullscreen ? 'none' : 'block';
+            fullscreenButton.innerHTML = isFullscreen
+                ? `<i class="bi bi-fullscreen-exit"></i> Exit Fullscreen`
+                : `<i class="bi bi-arrows-fullscreen"></i> Fullscreen Mode`;
+        };
+
+        document.getElementById('toggle-fullscreen').addEventListener('click', toggleFullscreen);
+    </script>
+</body>
+</html>
